@@ -2,16 +2,20 @@ package com.imooc.tank;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class Tank {
 	public static final int SPEED_X = 5;
 	public static final int SPEED_Y = 5;
-	public static final int WIDTH = 20;
-	public static final int HEIGHT = 20;
+	public static final int WIDTH = 30;
+	public static final int HEIGHT = 30;
 	
 	public static Random r = new Random();
 	
@@ -20,15 +24,39 @@ public class Tank {
 	private int oldX = 0, oldY = 0;
 	
 	private boolean bR = false, bU = false, bL = false, bD = false;
-	enum Dir {L, LU, U, RU, R, RD, D, LD, STOP};
 	boolean good;
 	private boolean live = true;
 	private Dir dir = Dir.STOP;
 	private Dir ptDir = Dir.D;
 	private int step = r.nextInt(12) + 3;
 	private int life = 100;
+	
+	private static Toolkit tk =  Toolkit.getDefaultToolkit();
+	private static Image[] tankImages = null;
+	private static Map<String, Image> imgs = new HashMap<String, Image>();
 	TankClient tc = null;
 	BloodBar bb = new BloodBar();
+	
+	static {
+		tankImages = new Image[] {
+				tk.getImage(Tank.class.getClassLoader().getResource("images/tankL.gif")),
+				tk.getImage(Tank.class.getClassLoader().getResource("images/tankLU.gif")),
+				tk.getImage(Tank.class.getClassLoader().getResource("images/tankU.gif")),
+				tk.getImage(Tank.class.getClassLoader().getResource("images/tankRU.gif")),
+				tk.getImage(Tank.class.getClassLoader().getResource("images/tankR.gif")),
+				tk.getImage(Tank.class.getClassLoader().getResource("images/tankRD.gif")),
+				tk.getImage(Tank.class.getClassLoader().getResource("images/tankD.gif")),
+				tk.getImage(Tank.class.getClassLoader().getResource("images/tankLD.gif"))
+		};
+		imgs.put("L", tankImages[0]);
+		imgs.put("LU", tankImages[1]);
+		imgs.put("U", tankImages[2]);
+		imgs.put("RU", tankImages[3]);
+		imgs.put("R", tankImages[4]);
+		imgs.put("RD", tankImages[5]);
+		imgs.put("D", tankImages[6]);
+		imgs.put("LD", tankImages[7]);
+	}
 
 	public Tank(int x, int y, boolean good) {
 		this.x = x;
@@ -50,14 +78,14 @@ public class Tank {
 		};
 		Color c = g.getColor();
 		if(good) {
-			g.setColor(Color.BLUE);
+//			g.setColor(Color.BLUE);
 			bb.draw(g);
 			this.supplyBlood();
 		} else {
-			g.setColor(Color.BLACK);
+//			g.setColor(Color.BLACK);
 		}
 		
-		g.fillOval(x, y, WIDTH, HEIGHT);
+//		g.fillOval(x, y, WIDTH, HEIGHT);
 		g.setColor(c);
 		drawTankPt(g);
 		move();
@@ -68,28 +96,28 @@ public class Tank {
 		g.setColor(Color.WHITE);
 		switch(ptDir) {
 		case L:
-			g.drawLine(x + WIDTH/2, y + HEIGHT/2, x, y + HEIGHT/2);
+			g.drawImage(imgs.get("L"), x, y, null);
 			break;
 		case LU:
-			g.drawLine(x + WIDTH/2, y + HEIGHT/2, x, y);
+			g.drawImage(imgs.get("LU"), x, y, null);
 			break;
 		case U:
-			g.drawLine(x + WIDTH/2, y + HEIGHT/2, x + WIDTH/2, y);
+			g.drawImage(imgs.get("U"), x, y, null);
 			break;
 		case RU:
-			g.drawLine(x + WIDTH/2, y + HEIGHT/2, x + WIDTH, y);
+			g.drawImage(imgs.get("RU"), x, y, null);
 			break;
 		case R:
-			g.drawLine(x + WIDTH/2, y + HEIGHT/2, x + WIDTH, y + HEIGHT/2);
+			g.drawImage(imgs.get("R"), x, y, null);
 			break;
 		case RD:
-			g.drawLine(x + WIDTH/2, y + HEIGHT/2, x + WIDTH, y + HEIGHT);
+			g.drawImage(imgs.get("RD"), x, y, null);
 			break;
 		case D:
-			g.drawLine(x + WIDTH/2, y + HEIGHT/2, x + WIDTH/2, y + HEIGHT);
+			g.drawImage(imgs.get("D"), x, y, null);
 			break;
 		case LD:
-			g.drawLine(x + WIDTH/2, y + HEIGHT/2, x, y + HEIGHT);
+			g.drawImage(imgs.get("LD"), x, y, null);
 			break;
 		default:
 			break;

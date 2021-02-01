@@ -42,7 +42,7 @@ public class TankClient extends Frame {
 		this.addKeyListener(new MonitorKey());
 		this.setResizable(false);
 		this.setVisible(true);
-		for(int i=1; i<=2; i++) {
+		for(int i=1; i<=Integer.parseInt(PropertyMgr.getProperty("initTankCount")); i++) {
 			this.enemyTanks.add(new Tank(50 + 40*i, 50 + 30*i, false, this));
 		}
 		new Thread(tankThread).start();

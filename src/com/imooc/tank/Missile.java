@@ -2,8 +2,12 @@ package com.imooc.tank;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Missile {
 	public static final int SPEED_X = 10;
@@ -19,17 +23,43 @@ public class Missile {
 	
 	private boolean good;
 	
-	Tank.Dir dir;
+	private static Image[] missileImages = null;
+	private static Toolkit tk = Toolkit.getDefaultToolkit();
+	private static Map<String, Image> imgs = new HashMap<String, Image>();
+	
+	Dir dir;
 	
 	TankClient tc = null;
 	
-	public Missile(int x, int y, Tank.Dir dir) {
+	static {
+		missileImages = new Image[] {
+				tk.getImage(Missile.class.getClassLoader().getResource("images/missileL.gif")),
+				tk.getImage(Missile.class.getClassLoader().getResource("images/missileLU.gif")),
+				tk.getImage(Missile.class.getClassLoader().getResource("images/missileU.gif")),
+				tk.getImage(Missile.class.getClassLoader().getResource("images/missileRU.gif")),
+				tk.getImage(Missile.class.getClassLoader().getResource("images/missileR.gif")),
+				tk.getImage(Missile.class.getClassLoader().getResource("images/missileRD.gif")),
+				tk.getImage(Missile.class.getClassLoader().getResource("images/missileD.gif")),
+				tk.getImage(Missile.class.getClassLoader().getResource("images/missileLD.gif"))
+		};
+		
+		imgs.put("L", missileImages[0]);
+		imgs.put("LU", missileImages[1]);
+		imgs.put("U", missileImages[2]);
+		imgs.put("RU", missileImages[3]);
+		imgs.put("R", missileImages[4]);
+		imgs.put("RD", missileImages[5]);
+		imgs.put("D", missileImages[6]);
+		imgs.put("LD", missileImages[7]);
+	}
+	
+	public Missile(int x, int y, Dir dir) {
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
 	}
 	
-	public Missile(int x, int y, Tank.Dir dir, boolean good, TankClient tc) {
+	public Missile(int x, int y, Dir dir, boolean good, TankClient tc) {
 		this(x, y, dir);
 		this.tc = tc;
 		this.good = good;
@@ -40,15 +70,34 @@ public class Missile {
 			tc.ms.remove(this);
 			return;
 		}
-		Color c = g.getColor();
-		if(good) {
-			g.setColor(Color.RED);
-		} else {
-			g.setColor(Color.BLACK);
+		switch(dir) {
+		case L:
+			g.drawImage(imgs.get("L"), x, y, null);
+			break;
+		case LU:
+			g.drawImage(imgs.get("LU"), x, y, null);
+			break;
+		case U:
+			g.drawImage(imgs.get("U"), x, y, null);
+			break;
+		case RU:
+			g.drawImage(imgs.get("RU"), x, y, null);
+			break;
+		case R:
+			g.drawImage(imgs.get("R"), x, y, null);
+			break;
+		case RD:
+			g.drawImage(imgs.get("RD"), x, y, null);
+			break;
+		case D:
+			g.drawImage(imgs.get("D"), x, y, null);
+			break;
+		case LD:
+			g.drawImage(imgs.get("LD"), x, y, null);
+			break;
+		default:
+			break;
 		}
-		
-		g.fillOval(x, y, WIDTH, HEIGHT);
-		g.setColor(c);
 		move();
 		checkDead();
 	}
